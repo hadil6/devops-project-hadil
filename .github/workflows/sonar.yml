@@ -1,0 +1,30 @@
+name: SonarQube Scan
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  sonar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run SonarQube Scanner
+        uses: SonarSource/sonarcloud-github-action@master
+        with:
+          args: >
+            -Dsonar.projectKey=devops-api
+            -Dsonar.organization=TON_ORG
+            -Dsonar.host.url=http://localhost:9000
+            -Dsonar.login=${{ secrets.SONAR_TOKEN }}
