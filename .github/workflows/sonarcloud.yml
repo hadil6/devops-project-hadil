@@ -2,32 +2,35 @@ name: SonarCloud Scan
 
 on:
   push:
-    branches:
-      - main
+    branches: ["main", "feat/express-app"]
   pull_request:
+    branches: ["main", "feat/express-app"]
 
 jobs:
   sonar:
-    runs-on: ubuntu-latest
+    name: SonarCloud Scan
+    runs-on: windows-latest
 
     steps:
+      # 1️⃣ Checkout du code
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Important pour Sonar
 
+      # 2️⃣ Installer Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '18'
+          node-version: 18
 
+      # 3️⃣ Installer les dépendances
       - name: Install dependencies
         run: npm install
         working-directory: devops-api
 
+      # 4️⃣ Lancer SonarCloud Scan
       - name: SonarCloud Scan
-        uses: SonarSource/sonarcloud-github-action@v2
-        with:
-         with:
-          projectBaseDir: devops-api 
-          args: >
-            -Dsonar.projectKey=hadil6devopsproject-hadil
-            -Dsonar.organization=hadil6
-            -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+        uses: SonarSource/sonarqube-scan-action@v6
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        working-directory: devops-api
