@@ -1,0 +1,31 @@
+name: SonarCloud Scan
+
+on:
+  push:
+    branches: ["feat/express-app"]
+  pull_request:
+    branches: ["feat/express-app"]
+
+jobs:
+  sonar:
+    name: SonarCloud Scan
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@v2
+        with:
+          projectKey: "hadil6devopsproject-hadil"   # remplace par ton Project Key
+          organization: "hadil6"            # remplace par ton Organization Key
+          token: ${{ secrets.SONAR_TOKEN2 }}
