@@ -23,14 +23,15 @@ jobs:
         with:
           node-version: 18
 
-      # 3️⃣ Installer les dépendances
+      # 3️⃣ Installer les dépendances (dans le sous-dossier devops-api)
       - name: Install dependencies
         run: npm install
         working-directory: devops-api
 
-      # 4️⃣ Lancer SonarCloud Scan
+      # 4️⃣ Lancer SonarCloud Scan (dans devops-api)
       - name: SonarCloud Scan
-        uses: SonarSource/sonarqube-scan-action@v6
+        uses: SonarSource/sonarcloud-github-action@v2
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        working-directory: devops-api
+        with:
+          projectBaseDir: devops-api   # ✅ Définit le répertoire du projet
