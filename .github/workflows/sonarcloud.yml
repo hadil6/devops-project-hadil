@@ -9,29 +9,29 @@ on:
 jobs:
   sonar:
     name: SonarCloud Scan
-    runs-on: ubuntu-latest   # ⚠️ changer Windows → Linux
+    runs-on: ubuntu-latest
 
     steps:
-      # 1️⃣ Checkout du code
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
         with:
-          fetch-depth: 0
+          fetch-depth: 0  # Important pour Sonar
 
-      # 2️⃣ Installer Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 18
 
-      # 3️⃣ Installer les dépendances
       - name: Install dependencies
         run: npm install
         working-directory: devops-api
 
-      # 4️⃣ Lancer SonarCloud Scan
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@v2
-        env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
           projectBaseDir: devops-api
+          args: >
+            -Dsonar.projectKey=hadil6_devops-project-hadil
+            -Dsonar.organization=hadil6devopsproject-hadil
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
