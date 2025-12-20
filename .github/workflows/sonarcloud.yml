@@ -1,4 +1,4 @@
-name: Build
+name: Build and SonarCloud Scan
 
 on:
   push:
@@ -11,24 +11,30 @@ jobs:
   sonarcloud:
     name: SonarCloud
     runs-on: windows-latest
+
     steps:
-      - uses: actions/checkout@v4
+      # 1️⃣ Checkout du code
+      - name: Checkout repository
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
+      # 2️⃣ Setup Node.js
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 18
 
+      # 3️⃣ Installer les dépendances
       - name: Install dependencies
         run: npm install
         working-directory: ./devops-api
 
+      # 4️⃣ SonarCloud Scan
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         with:
           projectKey: hadil6devopsproject-hadil
           organization: hadil6
           token: ${{ secrets.SONAR_TOKEN }}
-        working-directory: ./devops-api
+          projectBaseDir: devops-api
