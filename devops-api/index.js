@@ -52,5 +52,12 @@ app.get('/metrics', async (req, res) => {
   res.set('Content-Type', register.contentType);
   res.end(await register.metrics());
 });
+// Ajouter après les autres routes
+app.get('/trace', (req, res) => {
+  const traceId = uuidv4(); // Génère un identifiant unique
+  logger.info({ msg: 'Trace request received', id: traceId, method: req.method, url: req.url });
+  res.json({ message: 'Trace enregistrée !', traceId });
+});
+
 
 module.exports = app; // ← important pour les tests
