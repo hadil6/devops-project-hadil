@@ -1,31 +1,27 @@
-import express from 'express';
-import pino from 'pino';
-import { collectDefaultMetrics, Counter, Histogram, register } from 'prom-client';
-import { v4 as uuidv4 } from 'uuid';
+const express = require('express');
+const pino = require('pino');
+const { collectDefaultMetrics, Counter, Histogram, register } = require('prom-client');
+const { v4: uuidv4 } = require('uuid');
 
 const app = express();
 const PORT = 3000;
 
 app.use(express.json());
 
-// Exemple d’un log simple
 const logger = pino();
 
-// Metrics Prometheus
 collectDefaultMetrics();
 const httpRequestsTotal = new Counter({
   name: 'http_requests_total',
   help: 'Total HTTP Requests',
   labelNames: ['method', 'route', 'status']
 });
-
 const httpRequestDuration = new Histogram({
   name: 'http_request_duration_seconds',
   help: 'HTTP request duration in seconds',
   labelNames: ['method', 'route', 'status']
 });
 
-// Middleware pour log + metrics
 app.use((req, res, next) => {
   const start = Date.now();
   res.on('finish', () => {
@@ -37,22 +33,11 @@ app.use((req, res, next) => {
   next();
 });
 
-// Routes
-app.get('/', (req, res) => {
-  res.json({ message: 'Bienvenue sur mon API DevOps !' });
-});
-
-app.get('/health', (req, res) => {
-  logger.info({ msg: 'health check', id: uuidv4() });
-  res.json({ status: 'UP' });
-});
+app.get('/', (req, res) => res.json({ message: 'Bienvenue sur mon API DevOps !' }));
+app.get('/health', (req, res) => res.json({ status: 'UP' }));
 
 const fruits = ['pomme','banane','orange'];
-
-app.get('/fruits', (req, res) => {
-  res.json({ fruits });
-});
-
+app.get('/fruits', (req, res) => res.json({ fruits }));
 app.post('/fruits', (req, res) => {
   const { name } = req.body;
   if (name) {
@@ -68,7 +53,4 @@ app.get('/metrics', async (req, res) => {
   res.end(await register.metrics());
 });
 
-// Démarrage serveur
-app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
-});
+module.exports = app; // ← important pour les tests
