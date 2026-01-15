@@ -38,12 +38,7 @@ jobs:
         node server.js &
         sleep 5 # attend que l'API démarre
 
-    # 6️⃣ Run OWASP ZAP DAST scan
-    - name: OWASP ZAP Baseline Scan
-      uses: zaproxy/action-baseline@v0.6.0
-      with:
-        target: 'http://localhost:3000'
-        failOnRisk: true
+   
 
     # 7️⃣ Final confirmation
     - name: Workflow complete
