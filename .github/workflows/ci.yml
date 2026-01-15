@@ -38,7 +38,7 @@ jobs:
         node server.js &
         sleep 5 # attend que l'API démarre
 
-   
+    
 
     # 7️⃣ Final confirmation
     - name: Workflow complete
