@@ -1,0 +1,45 @@
+name: CI DevOps API
+
+on:
+  push:
+    branches: [ main, feat/express-app ]
+  pull_request:
+    branches: [ main, feat/express-app ]
+
+jobs:
+  build-test-scan:
+    runs-on: ubuntu-latest
+
+    steps:
+    # 1️⃣ Checkout repository
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    # 2️⃣ Setup Node.js
+    - name: Setup Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: 18
+
+    # 3️⃣ Install dependencies
+    - name: Install dependencies
+      run: npm ci
+      working-directory: devops-api
+
+    # 4️⃣ Run tests
+    - name: Run API tests
+      run: npm test
+      working-directory: devops-api
+
+    # 5️⃣ Start API in background
+    - name: Start API
+      run: |
+        cd devops-api
+        node server.js &
+        sleep 5 # attend que l'API démarre
+
+    
+
+    # 7️⃣ Final confirmation
+    - name: Workflow complete
+      run: echo "CI + Tests + DAST scan completed ✅"

@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: devops-api-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: devops-api
+  template:
+    metadata:
+      labels:
+        app: devops-api
+    spec:
+      containers:
+      - name: devops-api
+        image: devops-api:latest   # <-- nom exact de ton image locale
+        imagePullPolicy: IfNotPresent  # <-- important !
+        ports:
+        - containerPort: 3000

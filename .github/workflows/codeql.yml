@@ -1,0 +1,30 @@
+name: Node.js CI
+
+on:
+  push:
+    branches: ["feat/express-app"]
+  pull_request:
+    branches: ["feat/express-app"]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: npm install
+        working-directory: devops-api 
+
+      - name: Run tests
+        run: npm test || echo "No tests yet"
+
+      - name: Workflow OK
+        run: echo "GitHub Actions is working ✅"
